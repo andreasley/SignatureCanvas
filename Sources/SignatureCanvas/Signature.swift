@@ -2,19 +2,35 @@ import SwiftUI
 
 public class Signature: ObservableObject
 {
+    enum Error:Swift.Error {
+        case exportError
+    }
+    
     @Published var shapes: [Shape] = []
     
     var size: CGSize = .zero
+    var bounds: CGRect { CGRect(origin: .zero, size: size) }
     var shouldBeginNewShape = true
+    let lineWidth:Double
+    let lineColor:Color
 
     lazy var drawGesture = DragGesture(coordinateSpace: .local)
         .onChanged(onDragOccured)
         .onEnded(onDragEnded)
                 
+    public init(lineColor:Color = .black, lineWidth:Double = 2.0) {
+        self.lineWidth = lineWidth
+        self.lineColor = lineColor
+    }
+    
+    public func clear()
+    {
+        self.shapes.removeAll()
+    }
+
     func onDragOccured(_ value: DragGesture.Value)
     {
         let point = value.location
-        let bounds = CGRect(origin: .zero, size: size)
         
         guard bounds.contains(point) else {
             shouldBeginNewShape = true
@@ -32,7 +48,7 @@ public class Signature: ObservableObject
     {
         shouldBeginNewShape = true
     }
-
+    
     struct Shape: SwiftUI.Shape
     {
         var points = [CGPoint]()
