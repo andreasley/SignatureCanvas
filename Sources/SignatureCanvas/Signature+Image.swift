@@ -2,7 +2,7 @@ import SwiftUI
 
 extension Signature
 {
-    public func getImage(scalingFactor:Double = 2) throws -> CGImage
+    public func getCgImage(scalingFactor:Double = 2) throws -> CGImage
     {
         let bounds = self.bounds
         let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -30,5 +30,19 @@ extension Signature
             throw Error.exportError
         }
         return image
+    }
+}
+
+extension Signature
+{
+    public func getImage(scalingFactor:Double = 2) throws -> Data?
+    {
+        let cgImage = try getCgImage(scalingFactor: scalingFactor)
+        #if canImport(AppKit)
+        let pngData = NSBitmapImageRep(cgImage: cgImage).representation(using: .png, properties: [:])
+        #elseif canImport(UIKit)
+        let pngData = UIImage(cgImage: cgImage).pngData()
+        #endif
+        return pngData
     }
 }

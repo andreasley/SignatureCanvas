@@ -60,8 +60,7 @@ struct TestApp: App
         savePanel.begin { result in
             if result == .OK,
                let url = savePanel.url,
-               let cgImage = try? signature.getImage(),
-               let pngData = NSBitmapImageRep(cgImage: cgImage).representation(using: .png, properties: [:])
+               let pngData = try? signature.getImage()
             {
                 try? pngData.write(to: url)
             }
