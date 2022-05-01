@@ -15,11 +15,12 @@ extension Signature
             let lineColor = self.lineColor.cgColor
         else { throw Error.exportError }
 
+        context.translateBy(x: 0, y: size.height*scalingFactor)
+        context.scaleBy(x: scalingFactor, y: -scalingFactor)
         context.setLineCap(.round)
         context.setLineJoin(.round)
         context.setStrokeColor(lineColor)
         context.setLineWidth(self.lineWidth)
-        context.scaleBy(x: scalingFactor, y: scalingFactor)
 
         for shape in shapes {
             context.addPath(shape.path(in: bounds).cgPath)
