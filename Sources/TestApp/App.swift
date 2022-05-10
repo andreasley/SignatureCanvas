@@ -6,6 +6,18 @@ struct TestApp: App
 {
     @State public var signature = Signature()
 
+    #if os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    class AppDelegate: NSObject, NSApplicationDelegate
+    {
+        func applicationDidFinishLaunching(_ notification: Notification)
+        {
+            NSApp.setActivationPolicy(.regular)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+    #endif
+
     var body: some Scene {
         WindowGroup {
             SignatureCanvas(signature)
