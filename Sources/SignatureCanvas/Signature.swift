@@ -14,6 +14,10 @@ public class Signature: ObservableObject
     let lineWidth:Double
     let lineColor:Color
 
+    public var hasDrawing:Bool {
+        return signature.shapes.count > 0
+    }
+
     lazy var drawGesture = DragGesture(coordinateSpace: .local)
         .onChanged(onDragOccured)
         .onEnded(onDragEnded)
