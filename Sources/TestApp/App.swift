@@ -4,8 +4,8 @@ import SignatureCanvas
 @main
 struct TestApp: App
 {
-    @State public var signature = Signature()
-
+    @ObservedObject var signature = Signature()
+    
     #if os(macOS)
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     class AppDelegate: NSObject, NSApplicationDelegate
@@ -37,6 +37,7 @@ struct TestApp: App
                     }
                 }
         }
+        .onChange(of: signature.hasDrawing, perform: { newValue in print("Signature has drawing: \(signature.hasDrawing)") })
     }
     
     func clear()

@@ -7,7 +7,8 @@ public class Signature: ObservableObject
     }
     
     @Published var shapes: [Shape] = []
-    
+    @Published public var hasDrawing = false
+
     var size: CGSize = .zero
     var bounds: CGRect { CGRect(origin: .zero, size: size) }
     var shouldBeginNewShape = true
@@ -18,7 +19,8 @@ public class Signature: ObservableObject
         .onChanged(onDragOccured)
         .onEnded(onDragEnded)
                 
-    public init(lineColor:Color = .black, lineWidth:Double = 2.0) {
+    public init(lineColor:Color = .black, lineWidth:Double = 2.0)
+    {
         self.lineWidth = lineWidth
         self.lineColor = lineColor
     }
@@ -26,6 +28,7 @@ public class Signature: ObservableObject
     public func clear()
     {
         self.shapes.removeAll()
+        self.hasDrawing = false
     }
 
     func onDragOccured(_ value: DragGesture.Value)
@@ -40,6 +43,7 @@ public class Signature: ObservableObject
         var shape = shouldBeginNewShape ? Shape() : shapes.removeLast()
         shape.drawTo(point)
         shapes.append(shape)
+        hasDrawing = true
         
         shouldBeginNewShape = false
     }
