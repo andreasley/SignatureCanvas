@@ -73,7 +73,7 @@ struct TestApp: App
         savePanel.begin { result in
             if result == .OK,
                let url = savePanel.url,
-               let pngData = try? signature.getImage()
+               let pngData = try? signature.getImage(scalingFactor: 2, cropTo: .drawing(padding: 1))
             {
                 try? pngData.write(to: url)
             }

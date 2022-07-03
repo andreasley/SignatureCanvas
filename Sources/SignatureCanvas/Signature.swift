@@ -15,6 +15,9 @@ public class Signature: ObservableObject
     let lineWidth:Double
     let lineColor:Color
 
+    var min = CGPoint(x: 100_000, y: 100_000)
+    var max = CGPoint.zero
+
     lazy var drawGesture = DragGesture(coordinateSpace: .local)
         .onChanged(onDragOccured)
         .onEnded(onDragEnded)
@@ -29,6 +32,8 @@ public class Signature: ObservableObject
     {
         self.shapes.removeAll()
         self.hasDrawing = false
+        self.min = CGPoint(x: 100_000, y: 100_000)
+        self.max = CGPoint.zero
     }
 
     func onDragOccured(_ value: DragGesture.Value)
@@ -39,12 +44,28 @@ public class Signature: ObservableObject
             shouldBeginNewShape = true
             return
         }
-
+        
         var shape = shouldBeginNewShape ? Shape() : shapes.removeLast()
         shape.drawTo(point)
         shapes.append(shape)
-        hasDrawing = true
         
+        if point.x < min.x {
+            min.x = point.x
+        }
+
+        if point.y < min.y {
+            min.y = point.y
+        }
+
+        if point.x > max.x {
+            max.x = point.x
+        }
+
+        if point.y > max.y {
+            max.y = point.y
+        }
+
+        hasDrawing = true
         shouldBeginNewShape = false
     }
     
