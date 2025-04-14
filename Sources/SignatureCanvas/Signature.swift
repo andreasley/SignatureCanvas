@@ -1,26 +1,29 @@
 import SwiftUI
 
-public class Signature: ObservableObject
+@Observable
+public class Signature
 {
     enum Error:Swift.Error {
         case exportError
     }
     
-    @Published var shapes: [Shape] = []
-    @Published public var hasDrawing = false
+    public var shapes: [Shape] = []
+    public var hasDrawing = false
 
-    var size: CGSize = .zero
-    var bounds: CGRect { CGRect(origin: .zero, size: size) }
-    var shouldBeginNewShape = true
+    @ObservationIgnored var size: CGSize = .zero
+    @ObservationIgnored var bounds: CGRect { CGRect(origin: .zero, size: size) }
+    @ObservationIgnored var shouldBeginNewShape = true
     let lineWidth:Double
     let lineColor:Color
 
-    var min = CGPoint(x: 100_000, y: 100_000)
-    var max = CGPoint.zero
+    @ObservationIgnored var min = CGPoint(x: 100_000, y: 100_000)
+    @ObservationIgnored var max = CGPoint.zero
 
-    lazy var drawGesture = DragGesture(coordinateSpace: .local)
-        .onChanged(onDragOccured)
-        .onEnded(onDragEnded)
+    @ObservationIgnored var drawGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
+        DragGesture(coordinateSpace: .local)
+            .onChanged(onDragOccured)
+            .onEnded(onDragEnded)
+    }
                 
     public init(lineColor:Color = .black, lineWidth:Double = 2.0)
     {
@@ -73,12 +76,15 @@ public class Signature: ObservableObject
     {
         shouldBeginNewShape = true
     }
-    
-    struct Shape: SwiftUI.Shape
+}
+
+extension Signature
+{
+    public struct Shape: SwiftUI.Shape, Equatable
     {
         var points = [CGPoint]()
         
-        func path(in rect: CGRect) -> Path
+        public func path(in rect: CGRect) -> Path
         {
             var path = Path()
             
@@ -99,5 +105,13 @@ public class Signature: ObservableObject
         {
             points.append(point)
         }
+    }
+}
+
+extension Signature: Equatable
+{
+    public static func == (lhs: Signature, rhs: Signature) -> Bool
+    {
+        lhs.shapes == rhs.shapes
     }
 }

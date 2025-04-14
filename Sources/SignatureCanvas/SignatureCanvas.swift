@@ -2,11 +2,11 @@ import SwiftUI
 
 public struct SignatureCanvas: View
 {
-    @ObservedObject var signature:Signature
-    let lineWidth:Double
-    let lineColor:Color
+    @State var signature: Signature
+    let lineWidth: Double
+    let lineColor: Color
     
-    public init(_ signature:Signature, lineColor:Color? = nil, lineWidth:Double? = nil) {
+    public init(_ signature: Signature, lineColor: Color? = nil, lineWidth: Double? = nil) {
         self.signature = signature
         self.lineWidth = lineWidth ?? signature.lineWidth
         self.lineColor = lineColor ?? signature.lineColor

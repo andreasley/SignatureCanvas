@@ -4,7 +4,7 @@ import SignatureCanvas
 @main
 struct TestApp: App
 {
-    @ObservedObject var signature = Signature()
+    @State var signature = Signature()
     
     #if os(macOS)
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -31,13 +31,17 @@ struct TestApp: App
                     }
                     ToolbarItem {
                         Button("Save as PDF", action: exportPDF)
+                            .disabled(!signature.hasDrawing)
                     }
                     ToolbarItem {
                         Button("Save as PNG", action: exportPNG)
+                            .disabled(!signature.hasDrawing)
                     }
                 }
         }
-        .onChange(of: signature.hasDrawing, perform: { newValue in print("Signature has drawing: \(signature.hasDrawing)") })
+        .onChange(of: signature.hasDrawing) { oldValue, newValue in
+            print("Signature has drawing: \(signature.hasDrawing)")
+        }
     }
     
     func clear()
